@@ -1,2 +1,2 @@
 pub mod todo;
-pub mod users;
+pub mod user;
