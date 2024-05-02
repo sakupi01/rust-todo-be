@@ -1,0 +1,42 @@
+-- todoアプリのテーブル定義
+
+-- ユーザーテーブル
+CREATE TABLE users (
+   id SERIAL PRIMARY KEY,
+   email TEXT NOT NULL UNIQUE,
+   password TEXT NOT NULL,
+   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TODOテーブル
+CREATE TABLE todos (
+   id SERIAL PRIMARY KEY,
+   user_id INTEGER NOT NULL REFERENCES users(id),
+   title TEXT NOT NULL,
+   description TEXT,
+   due_date DATE,
+   is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- カテゴリテーブル
+CREATE TABLE categories (
+   id SERIAL PRIMARY KEY,
+   user_id INTEGER NOT NULL REFERENCES users(id),
+   name TEXT NOT NULL,
+   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- TODOとカテゴリの中間テーブル
+CREATE TABLE todo_categories (
+   todo_id INTEGER NOT NULL REFERENCES todos(id),
+   category_id INTEGER NOT NULL REFERENCES categories(id),
+   PRIMARY KEY (todo_id, category_id),
+   FOREIGN KEY (todo_id) REFERENCES todos(id),
+   FOREIGN KEY (category_id) REFERENCES categories(id)
+);
