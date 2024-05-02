@@ -1,8 +1,9 @@
-use chrono::{Local, DateTime};
+use chrono::{DateTime, Local};
 
-struct User {
-    id: String,
-    created_at: DateTime<Local>,
-    updated_at: DateTime<Local>,
-    name: String,
+#[derive(Clone, Debug)]
+pub struct User {
+    pub id: String,
+    pub created_at: DateTime<Local>,
+    pub updated_at: DateTime<Local>,
+    pub name: String,
 }

@@ -1,4 +1,3 @@
-mod domain;
 use crate::domain::todo::Todo;
 
 pub trait TodoDataAccess {
