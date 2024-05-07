@@ -1,12 +1,19 @@
+use crate::domain::todo::Todo;
 use crate::interface_adapter::controller;
+use crate::interface_adapter::controller::web_todo::WebTodoController;
 use crate::interface_adapter::controller::web_user::WebUserController;
 use crate::usecase::interactor::user::input_user;
-use crate::{domain::user::User, usecase::data_access::user::UserDataAccess};
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use crate::{
+    domain::user::User,
+    usecase::data_access::{todo::TodoDataAccess, user::UserDataAccess},
+};
+use actix_web::{delete, get, post, put, web, App, HttpResponse, HttpServer, Responder};
 use chrono::Local;
+use serde::{Deserialize, Serialize};
 
-struct FakeDataAccess {}
-impl UserDataAccess for FakeDataAccess {
+//=======================================================================
+struct FakeUserDataAccess {}
+impl UserDataAccess for FakeUserDataAccess {
     fn create(&self, user: User) -> Result<(), String> {
         todo!()
     }
@@ -33,16 +40,16 @@ impl UserDataAccess for FakeDataAccess {
     }
 }
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UserInputDto {
+    name: String,
 }
 
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
     let controller = WebUserController {
         userInputBoundary: (input_user {
-            userDataAccess: FakeDataAccess {},
+            userDataAccess: FakeUserDataAccess {},
         }),
     };
     let users = controller.get_all_user().unwrap();
@@ -57,10 +64,64 @@ async fn get_user_by_id(path: web::Path<String>) -> impl Responder {
 }
 
 #[post("/users")]
-async fn create_user(user_info: web::Json<User>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Created {:?}!",user_info.0))
+async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
+    HttpResponse::Ok().body("Created Success!")
 }
 
+#[put("/users")]
+async fn update_user(user_input: web::Json<UserInputDto>) -> impl Responder {
+    HttpResponse::Ok().body("Updated Success!")
+}
+
+#[delete("/users")]
+async fn delete_user(user_input: web::Json<UserInputDto>) -> impl Responder {
+    HttpResponse::Ok().body("Deleted Success!")
+}
+
+//=======================================================================
+struct FakeTodoDataAccess {}
+impl TodoDataAccess for FakeTodoDataAccess {
+    fn create(&self, todo: Todo) -> Result<(), String> {
+        todo!()
+    }
+
+    fn update_title(&self, name: String) -> Result<(), String> {
+        todo!()
+    }
+
+    fn update_content(&self, content: String) -> Result<(), String> {
+        todo!()
+    }
+
+    fn delete(&self, id: String) -> Result<(), String> {
+        todo!()
+    }
+
+    fn get_all(&self) -> Result<Vec<Todo>, String> {
+        todo!()
+    }
+
+    fn get_by_user_id(&self, id: String) -> Result<Vec<Todo>, String> {
+        todo!()
+    }
+}
+
+#[get("/todo")]
+async fn get_all_todo() -> impl Responder {
+    let controller = WebTodoController {
+        todoInputBoundary: (input_user {
+            todoDataAccess: FakeTodoDataAccess {},
+        }),
+    };
+    let users = controller.get_all_user().unwrap();
+    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+}
+
+//=======================================================================
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
+}
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)

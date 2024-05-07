@@ -1,8 +1,8 @@
 use crate::domain::todo::Todo;
 use crate::usecase::input_boundary::todo::TodoInputBoundary;
 
-struct WebTodoController {
-    todoInputBoundary: dyn TodoInputBoundary,
+pub struct WebTodoController {
+    pub todoInputBoundary: dyn TodoInputBoundary,
 }
 impl WebTodoController {
     fn create_todo(&self, todo: &Todo) -> Result<(), String> {
