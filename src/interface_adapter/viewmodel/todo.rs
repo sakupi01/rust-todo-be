@@ -1,8 +1,8 @@
 use std::option;
 pub struct ResultTodoViewModel {
-    pub error:option::Option<String>,
-    pub success:option::Option<String>,
-    pub error_message:option::Option<String>,
+    pub error: option::Option<String>,
+    pub success: option::Option<String>,
+    pub error_message: option::Option<String>,
 }
 
 pub struct TodoViewModel {
@@ -15,8 +15,8 @@ pub struct TodoViewModel {
 }
 
 pub struct ResultGetTodoViewModel {
-    pub error:option::Option<String>,
-    pub success:option::Option<String>,
-    pub error_message:option::Option<String>,
-    pub todos:option::Option<Vec<TodoViewModel>>,
+    pub error: option::Option<String>,
+    pub success: option::Option<String>,
+    pub error_message: option::Option<String>,
+    pub todos: option::Option<Vec<TodoViewModel>>,
 }

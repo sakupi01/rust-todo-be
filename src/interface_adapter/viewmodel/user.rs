@@ -1,9 +1,9 @@
 use std::option::Option;
 
 pub struct ResultUserViewModel {
-    pub error:Option<String>,
-    pub success:Option<String>,
-    pub error_message:Option<String>,
+    pub error: Option<String>,
+    pub success: Option<String>,
+    pub error_message: Option<String>,
 }
 
 pub struct UserViewModel {
@@ -14,8 +14,8 @@ pub struct UserViewModel {
 }
 
 pub struct ResultGetUserViewModel {
-    pub error:Option<String>,
-    pub success:Option<String>,
-    pub error_message:Option<String>,
-    pub users:Option<Vec<UserViewModel>>,
+    pub error: Option<String>,
+    pub success: Option<String>,
+    pub error_message: Option<String>,
+    pub users: Option<Vec<UserViewModel>>,
 }

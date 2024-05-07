@@ -1,4 +1,10 @@
-use crate::{domain::todo::Todo, interface_adapter::{viewmodel::todo::{ResultGetTodoViewModel, ResultTodoViewModel}, viewmodel::todo::TodoViewModel}};
+use crate::{
+    domain::todo::Todo,
+    interface_adapter::{
+        viewmodel::todo::TodoViewModel,
+        viewmodel::todo::{ResultGetTodoViewModel, ResultTodoViewModel},
+    },
+};
 
 fn create(res: Result<(), String>) -> ResultTodoViewModel {
     match res {
