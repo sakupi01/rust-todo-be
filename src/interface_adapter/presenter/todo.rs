@@ -1,4 +1,4 @@
-use crate::{domain::todo::Todo, interface_adapter::todo_viewmodel::{ResultTodoViewModel, ResultGetTodoViewModel}};
+use crate::{domain::todo::Todo, interface_adapter::{viewmodel::todo::{ResultGetTodoViewModel, ResultTodoViewModel}, viewmodel::todo::TodoViewModel}};
 
 fn create(res: Result<(), String>) -> ResultTodoViewModel {
     match res {
@@ -62,7 +62,7 @@ fn get_all(res: Result<Vec<Todo>, String>) -> ResultGetTodoViewModel {
         Ok(todos) => {
             let todos = todos
                 .iter()
-                .map(|todo| crate::interface_adapter::todo_viewmodel::TodoViewModel {
+                .map(|todo| TodoViewModel {
                     id: todo.id.clone(),
                     created_at: todo.created_at.to_string(),
                     updated_at: todo.updated_at.to_string(),
@@ -92,7 +92,7 @@ fn get_by_user_id(res: Result<Vec<Todo>, String>) -> ResultGetTodoViewModel {
         Ok(todos) => {
             let todos = todos
                 .iter()
-                .map(|todo| crate::interface_adapter::todo_viewmodel::TodoViewModel {
+                .map(|todo| TodoViewModel {
                     id: todo.id.clone(),
                     created_at: todo.created_at.to_string(),
                     updated_at: todo.updated_at.to_string(),

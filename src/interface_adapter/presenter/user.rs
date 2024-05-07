@@ -1,4 +1,4 @@
-use crate::{domain::user::User, interface_adapter::{todo_viewmodel::ResultTodoViewModel, user_viewmodel::ResultUserViewModel}}
+use crate::{domain::user::User, interface_adapter::{viewmodel::todo::ResultTodoViewModel, viewmodel::user::ResultUserViewModel}};
 
 fn create_user(res: Result<(), String>) -> ResultUserViewModel {
     match res {
