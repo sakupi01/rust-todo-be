@@ -56,6 +56,11 @@ async fn get_user_by_id(path: web::Path<String>) -> impl Responder {
     HttpResponse::Ok().body(format!("Welcome, user_id {}!", user_id))
 }
 
+#[post("/users")]
+async fn create_user(user_info: web::Json<User>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Created {:?}!",user_info.0))
+}
+
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
