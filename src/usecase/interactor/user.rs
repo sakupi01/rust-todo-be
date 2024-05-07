@@ -1,6 +1,6 @@
+use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 use crate::usecase::input_boundary::user::UserInputBoundary;
-use crate::usecase::output_data::user::User;
 
 pub struct input_user<T> {
     pub userDataAccess: T,
@@ -13,7 +13,6 @@ where
     fn create(&self, user: User) -> Result<(), String> {
         self.userDataAccess.create(user)
     }
-
     fn update_name(&self, id: String, name: String) -> Result<(), String> {
         self.userDataAccess.update_name(name)
     }

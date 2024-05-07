@@ -1,10 +1,6 @@
-use crate::{
-    interface_adapter::controller::web_user::WebUserController,
-    usecase::{
-        data_access::user::UserDataAccess, input_boundary::user::UserInputBoundary,
-        interactor::user::input_user, output_data::user::User,
-    },
-};
+use crate::interface_adapter::controller::web_user::WebUserController;
+use crate::usecase::interactor::user::input_user;
+use crate::{domain::user::User, usecase::data_access::user::UserDataAccess};
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use chrono::Local;
 

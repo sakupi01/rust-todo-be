@@ -2,10 +2,8 @@
 //     println!("Hello, world!");
 
 // }
-mod framework;
-
-use crate::framework::api_server;
 use actix_web::{web, App, HttpServer};
+use rust_todo_be::framework::api_server;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

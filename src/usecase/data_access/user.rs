@@ -1,4 +1,4 @@
-use crate::usecase::output_data::user::User;
+use crate::domain::user::User;
 pub trait UserDataAccess {
     fn create(&self, user: User) -> Result<(), String>;
     fn update_name(&self, name: String) -> Result<(), String>;

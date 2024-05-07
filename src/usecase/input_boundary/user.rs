@@ -1,4 +1,4 @@
-use crate::usecase::output_data::user::User;
+use crate::domain::user::User;
 
 pub trait UserInputBoundary {
     fn create(&self, user: User) -> Result<(), String>;
