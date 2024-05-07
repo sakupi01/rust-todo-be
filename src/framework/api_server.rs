@@ -1,4 +1,5 @@
 use crate::domain::todo::Todo;
+use crate::domain::user;
 use crate::interface_adapter::controller;
 use crate::interface_adapter::controller::web_todo::WebTodoController;
 use crate::interface_adapter::controller::web_user::WebUserController;
@@ -107,6 +108,19 @@ impl TodoDataAccess for FakeTodoDataAccess {
     }
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UpdateTitleDto {
+    title: String,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UpdateContentDto {
+    content: String,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct DeleteTodoDto {
+    id: String,
+}
+
 #[get("/todo")]
 async fn get_all_todo() -> impl Responder {
     let controller = WebTodoController {
@@ -119,23 +133,23 @@ async fn get_all_todo() -> impl Responder {
 }
 
 #[put("/todo/title")]
-async fn update_title() -> impl Responder {
-    HttpResponse::Ok().body(format!("Updated Success"))
+async fn update_title(update_title_dto: web::Json<UpdateTitleDto>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Updated Success: {:?}", update_title_dto))
 }
 
 #[put("/todo/content")]
-async fn update_content() -> impl Responder {
-    HttpResponse::Ok().body(format!("Updated Success"))
+async fn update_content(update_content_dto: web::Json<UpdateContentDto>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Updated Success: {:?}", update_content_dto))
 }
 
 #[delete("/todo")]
-async fn delete_todo() -> impl Responder {
-    HttpResponse::Ok().body(format!("Deleted Success"))
+async fn delete_todo(delete_todo_dto: web::Json<DeleteTodoDto>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Deleted Success: {:?}", delete_todo_dto))
 }
 
 #[get("/users/{user_id}/todo")]
-async fn get_todo_by_user_id() -> impl Responder {
-    HttpResponse::Ok().body(format!("Success"))
+async fn get_todo_by_user_id(user_id: web::Path<String>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Success: {:?}", user_id))
 }
 
 //=======================================================================
