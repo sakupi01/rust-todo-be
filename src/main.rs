@@ -4,7 +4,7 @@
 // }
 use actix_web::{web, App, HttpServer};
 use rust_todo_be::{db::init_todo_db::get_todo_db, framework::api_server};
-use std::thread;
+use std::{borrow::Borrow, thread};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

@@ -20,7 +20,7 @@ impl UserDataAccess for FakeUserDataAccess {
         todo!()
     }
 
-    fn update_name(&self, name: String) -> Result<(), String> {
+    fn update_name(&self,id: String, name: String) -> Result<(), String> {
         todo!()
     }
 
@@ -83,19 +83,19 @@ async fn delete_user(user_input: web::Json<UserInputDto>) -> impl Responder {
 //=======================================================================
 struct FakeTodoDataAccess {}
 impl TodoDataAccess for FakeTodoDataAccess {
-    fn create(&self, todo: Todo) -> Result<(), String> {
+    fn create(&mut self, todo: Todo) -> Result<(), String> {
         todo!()
     }
 
-    fn update_title(&self, name: String) -> Result<(), String> {
+    fn update_title(&mut self,id:String, name: String) -> Result<(), String> {
         todo!()
     }
 
-    fn update_content(&self, content: String) -> Result<(), String> {
+    fn update_content(&mut self,id:String, content: String) -> Result<(), String> {
         todo!()
     }
 
-    fn delete(&self, id: String) -> Result<(), String> {
+    fn delete(&mut self, id: String) -> Result<(), String> {
         todo!()
     }
 

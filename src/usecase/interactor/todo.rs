@@ -10,19 +10,19 @@ impl<T> TodoInputBoundary for InputTodo<T>
 where
     T: TodoDataAccess,
 {
-    fn create(&self, todo: Todo) -> Result<(), String> {
+    fn create(&mut self, todo: Todo) -> Result<(), String> {
         self.todo_data_access.create(todo)
     }
 
-    fn update_title(&self, id: String, title: String) -> Result<(), String> {
-        self.todo_data_access.update_title(title)
+    fn update_title(&mut self, id: String, title: String) -> Result<(), String> {
+        self.todo_data_access.update_title(id,title)
     }
 
-    fn update_content(&self, id: String, content: String) -> Result<(), String> {
-        self.todo_data_access.update_content(content)
+    fn update_content(&mut self, id: String, content: String) -> Result<(), String> {
+        self.todo_data_access.update_content(id,content)
     }
 
-    fn delete(&self, id: String) -> Result<(), String> {
+    fn delete(&mut self, id: String) -> Result<(), String> {
         self.todo_data_access.delete(id)
     }
 

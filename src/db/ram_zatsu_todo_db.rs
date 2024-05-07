@@ -7,15 +7,21 @@ pub struct RamZatsuTodoDb {
     db: HashMap<String, Todo>,
 }
 
+impl RamZatsuTodoDb {
+    pub fn new() -> RamZatsuTodoDb {
+        RamZatsuTodoDb{db:HashMap::new()}
+    }
+}
+
 impl TodoDataAccess for RamZatsuTodoDb {
-    fn create(&self, todo: crate::domain::todo::Todo) -> Result<(), String> {
-        if self.db.insert(todo.id, todo).is_none() {
+    fn create(&mut self, todo: crate::domain::todo::Todo) -> Result<(), String> {
+        if self.db.insert(todo.id.clone(), todo).is_none() {
             Ok(())
         } else {
             Err("fail to insert todo".to_string())
         }
     }
-    fn update_title(&self, id: String, title: String) -> Result<(), String> {
+    fn update_title(&mut self, id: String, title: String) -> Result<(), String> {
         if let Some(x) = self.db.get_mut(&id) {
             (*x).title = title;
             Ok(())
@@ -23,7 +29,7 @@ impl TodoDataAccess for RamZatsuTodoDb {
             Err("fail to update title".to_string())
         }
     }
-    fn update_content(&self, id: String, content: String) -> Result<(), String> {
+    fn update_content(&mut self, id: String, content: String) -> Result<(), String> {
         if let Some(x) = self.db.get_mut(&id) {
             (*x).content = content;
             Ok(())
@@ -31,7 +37,7 @@ impl TodoDataAccess for RamZatsuTodoDb {
             Err("fail to update title".to_string())
         }
     }
-    fn delete(&self, id: String) -> Result<(), String> {
+    fn delete(&mut self, id: String) -> Result<(), String> {
         if self.db.remove(&id).is_some() {
             Ok(())
         } else {
