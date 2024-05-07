@@ -2,11 +2,14 @@ use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-pub struct input_user {
-    pub userDataAccess: dyn UserDataAccess,
+pub struct input_user<T> {
+    pub userDataAccess: T,
 }
 
-impl UserInputBoundary for input_user {
+impl<T> UserInputBoundary for input_user<T>
+where
+    T: UserDataAccess,
+{
     fn create(&self, user: User) -> Result<(), String> {
         self.userDataAccess.create(user)
     }

@@ -39,13 +39,10 @@ impl UserDataAccess for FakeDataAccess {
 
 #[get("/user")]
 async fn get_all_user() -> impl Responder {
-    let foo = FakeDataAccess {};
-    let bar = input_user {
-        userDataAccess: foo,
-    };
-
     let controller = WebUserController {
-        userInputBoundary: bar,
+        userInputBoundary: (input_user {
+            userDataAccess: FakeDataAccess {},
+        }),
     };
     let users = get_all_user();
     HttpResponse::Ok().body("Hello world!")

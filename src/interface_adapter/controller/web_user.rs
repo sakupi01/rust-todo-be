@@ -1,10 +1,13 @@
 use crate::domain::user::User;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-pub struct WebUserController {
-    userInputBoundary: dyn UserInputBoundary,
+pub struct WebUserController<T> {
+    pub userInputBoundary: T,
 }
-impl WebUserController {
+impl<T> WebUserController<T>
+where
+    T: UserInputBoundary,
+{
     fn create_user(&self, user: &User) -> Result<(), String> {
         self.userInputBoundary.create(user.clone())
     }
