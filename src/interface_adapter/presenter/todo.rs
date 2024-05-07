@@ -1,5 +1,5 @@
 use crate::{
-    domain::todo::Todo,
+    usecase::output_data::todo::Todo,
     interface_adapter::{
         viewmodel::todo::TodoViewModel,
         viewmodel::todo::{ResultGetTodoViewModel, ResultTodoViewModel},
