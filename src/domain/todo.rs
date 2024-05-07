@@ -1,6 +1,6 @@
 use chrono::{DateTime, Local};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Todo {
     pub id: String,
     pub created_at: DateTime<Local>,
