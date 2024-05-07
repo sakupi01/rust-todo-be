@@ -1,3 +1,4 @@
+use crate::interface_adapter::controller;
 use crate::interface_adapter::controller::web_user::WebUserController;
 use crate::usecase::interactor::user::input_user;
 use crate::{domain::user::User, usecase::data_access::user::UserDataAccess};
@@ -37,15 +38,22 @@ async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
-#[get("/user")]
-async fn get_all_user() -> impl Responder {
+#[get("/users")]
+async fn get_all_users() -> impl Responder {
     let controller = WebUserController {
         userInputBoundary: (input_user {
             userDataAccess: FakeDataAccess {},
         }),
     };
-    let users = get_all_user();
-    HttpResponse::Ok().body("Hello world!")
+    let users = controller.get_all_user().unwrap();
+    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+}
+
+#[get("/users/{user_id}")]
+async fn get_user_by_id(path: web::Path<String>) -> impl Responder {
+    let user_id = path.into_inner();
+    println!("user_id: {:?}", user_id);
+    HttpResponse::Ok().body(format!("Welcome, user_id {}!", user_id))
 }
 
 #[post("/echo")]

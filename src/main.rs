@@ -10,6 +10,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(api_server::hello)
+            .service(api_server::get_all_users)
+            .service(api_server::get_user_by_id)
             .service(api_server::echo)
             .route("/hey", web::get().to(api_server::manual_hello))
     })
