@@ -17,15 +17,15 @@ use serde::{Deserialize, Serialize};
 struct FakeUserDataAccess {}
 impl UserDataAccess for FakeUserDataAccess {
     fn create(&self, user: User) -> Result<(), String> {
-        todo!()
+        Ok(())
     }
 
     fn update_name(&self,id: String, name: String) -> Result<(), String> {
-        todo!()
+        Ok(())
     }
 
     fn delete(&self, id: String) -> Result<(), String> {
-        todo!()
+        Ok(())
     }
 
     fn get_all(&self) -> Result<Vec<User>, String> {
@@ -84,7 +84,7 @@ async fn delete_user(user_input: web::Json<UserInputDto>) -> impl Responder {
 struct FakeTodoDataAccess {}
 impl TodoDataAccess for FakeTodoDataAccess {
     fn create(&mut self, todo: Todo) -> Result<(), String> {
-        todo!()
+        Ok(())
     }
 
     fn update_title(&mut self,id:String, name: String) -> Result<(), String> {
@@ -100,7 +100,7 @@ impl TodoDataAccess for FakeTodoDataAccess {
     }
 
     fn get_all(&self) -> Result<Vec<Todo>, String> {
-        todo!()
+        Ok(vec![])
     }
 
     fn get_by_user_id(&self, id: String) -> Result<Vec<Todo>, String> {
