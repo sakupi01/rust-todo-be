@@ -1,5 +1,4 @@
-use crate::domain::user::User;
-use crate::usecase::input_boundary::user::UserInputBoundary;
+use crate::usecase::{input_boundary::user::UserInputBoundary, output_data::user::User};
 
 pub struct WebUserController<T> {
     pub userInputBoundary: T,

@@ -1,8 +1,8 @@
 use crate::{
-    usecase::output_data::user::User,
     interface_adapter::{
         viewmodel::todo::ResultTodoViewModel, viewmodel::user::ResultUserViewModel,
     },
+    usecase::output_data::user::User,
 };
 
 fn create_user(res: Result<(), String>) -> ResultUserViewModel {

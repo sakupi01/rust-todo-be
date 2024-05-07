@@ -4,9 +4,8 @@
 // }
 mod framework;
 
-use actix_web::{web, App, HttpServer};
 use crate::framework::api_server;
-
+use actix_web::{web, App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

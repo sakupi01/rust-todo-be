@@ -1,9 +1,8 @@
 use crate::{
-    domain::user::User,
     interface_adapter::controller::web_user::WebUserController,
     usecase::{
         data_access::user::UserDataAccess, input_boundary::user::UserInputBoundary,
-        interactor::user::input_user,
+        interactor::user::input_user, output_data::user::User,
     },
 };
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
@@ -23,7 +22,7 @@ impl UserDataAccess for FakeDataAccess {
         todo!()
     }
 
-    fn get_all(&self) -> Result<Vec<crate::domain::user::User>, String> {
+    fn get_all(&self) -> Result<Vec<User>, String> {
         Ok(vec![User {
             id: "綾鷹".to_string(),
             created_at: Local::now(),
@@ -35,6 +34,11 @@ impl UserDataAccess for FakeDataAccess {
     fn get_by_id(&self, id: String) -> Result<User, String> {
         todo!()
     }
+}
+
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
 }
 
 #[get("/user")]
