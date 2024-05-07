@@ -118,6 +118,26 @@ async fn get_all_todo() -> impl Responder {
     HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
 }
 
+#[put("/todo/title")]
+async fn update_title() -> impl Responder {
+    HttpResponse::Ok().body(format!("Updated Success"))
+}
+
+#[put("/todo/content")]
+async fn update_content() -> impl Responder {
+    HttpResponse::Ok().body(format!("Updated Success"))
+}
+
+#[delete("/todo")]
+async fn delete_todo() -> impl Responder {
+    HttpResponse::Ok().body(format!("Deleted Success"))
+}
+
+#[get("/users/{user_id}/todo")]
+async fn get_todo_by_user_id() -> impl Responder {
+    HttpResponse::Ok().body(format!("Success"))
+}
+
 //=======================================================================
 #[get("/")]
 async fn hello() -> impl Responder {
