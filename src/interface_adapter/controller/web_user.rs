@@ -1,7 +1,7 @@
 use crate::domain::user::User;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-struct WebUserController {
+pub struct WebUserController {
     userInputBoundary: dyn UserInputBoundary,
 }
 impl WebUserController {

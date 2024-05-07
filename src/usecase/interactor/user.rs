@@ -2,8 +2,8 @@ use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-struct input_user {
-    userDataAccess: dyn UserDataAccess,
+pub struct input_user {
+    pub userDataAccess: dyn UserDataAccess,
 }
 
 impl UserInputBoundary for input_user {
