@@ -2,6 +2,7 @@ use crate::domain::todo::Todo;
 use crate::interface_adapter::controller;
 use crate::interface_adapter::controller::web_todo::WebTodoController;
 use crate::interface_adapter::controller::web_user::WebUserController;
+use crate::usecase::interactor::todo::InputTodo;
 use crate::usecase::interactor::user::input_user;
 use crate::{
     domain::user::User,
@@ -109,11 +110,11 @@ impl TodoDataAccess for FakeTodoDataAccess {
 #[get("/todo")]
 async fn get_all_todo() -> impl Responder {
     let controller = WebTodoController {
-        todoInputBoundary: (input_user {
-            todoDataAccess: FakeTodoDataAccess {},
+        todo_input_boundary: (InputTodo {
+            todo_data_access: FakeTodoDataAccess {},
         }),
     };
-    let users = controller.get_all_user().unwrap();
+    let users = controller.get_all_todo().unwrap();
     HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
 }
 
