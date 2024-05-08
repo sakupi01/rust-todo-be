@@ -1,3 +1,6 @@
+use std::ops::{Deref, DerefMut};
+
+use crate::db::init_todo_db::get_todo_db;
 use crate::domain::todo::Todo;
 use crate::domain::user;
 use crate::interface_adapter::controller;
@@ -131,16 +134,36 @@ struct DeleteTodoDto {
 async fn get_all_todo() -> impl Responder {
     let controller = WebTodoController {
         todo_input_boundary: (InputTodo {
-            todo_data_access: FakeTodoDataAccess {},
+            todo_data_access: get_todo_db().lock().unwrap().deref_mut(),
         }),
     };
     let users = controller.get_all_todo().unwrap();
-    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+
+    let mut todo_db = get_todo_db().lock().unwrap();
+
+    HttpResponse::Ok().body(format!("Welcome, users {:?}!", todo))
 }
 
 #[post("/todo")]
 async fn create_todo(create_todo_dto: web::Json<CreateTodoDto>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Created Success!"))
+    let CreateTodoDto {
+        title,
+        content,
+        user_id,
+    } = create_todo_dto.deref().clone();
+
+    let todo = Todo {
+        id: "1".to_string(),
+        created_at: Local::now(),
+        updated_at: Local::now(),
+        title: title,
+        content: content,
+        user_id: user_id,
+    };
+
+    let mut todo_db = get_todo_db().lock().unwrap();
+    let _ = todo_db.deref_mut().create(todo.clone());
+    HttpResponse::Ok().body(format!("Created Success: {:?}", todo))
 }
 
 #[put("/todo/title")]
