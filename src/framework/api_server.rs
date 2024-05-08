@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use crate::db::init_todo_db::get_todo_db;
+use crate::db::init_user_db::get_user_db;
 use crate::db::ram_zatsu_todo_db::RamZatsuTodoDb;
 use crate::domain::todo::Todo;
 use crate::domain::user;
@@ -51,6 +52,12 @@ struct UserInputDto {
     name: String,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UpdateUserDto {
+    id: String,
+    name: String,
+}
+
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
     let controller = WebUserController {
@@ -75,7 +82,15 @@ async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
 }
 
 #[put("/users")]
-async fn update_user(user_input: web::Json<UserInputDto>) -> impl Responder {
+async fn update_user(update_user_dto: web::Json<UpdateUserDto>) -> impl Responder {
+    let UpdateUserDto { id, name } = update_user_dto.deref().clone();
+    
+    let mut users_db = get_user_db().lock().unwrap();
+    let user_data_access = users_db.deref_mut();
+    let mut controller = WebUserController { 
+        userInputBoundary: input_user { user_data_access },
+    };
+    let result = controller.get_user_by_id()
     HttpResponse::Ok().body("Updated Success!")
 }
 
