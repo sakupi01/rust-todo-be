@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use crate::db::init_todo_db::get_todo_db;
+use crate::db::ram_zatsu_todo_db::RamZatsuTodoDb;
 use crate::domain::todo::Todo;
 use crate::domain::user;
 use crate::interface_adapter::controller;
@@ -132,15 +133,12 @@ struct DeleteTodoDto {
 
 #[get("/todo")]
 async fn get_all_todo() -> impl Responder {
-    let mut foo = get_todo_db().lock().unwrap().deref_mut();
-    let controller = WebTodoController {
-        todo_input_boundary: (InputTodo {
-            todo_data_access: foo,
-        }),
-    };
-    let todo = controller.todo_input_boundary.todo_data_access.get_all();
-
     let mut todo_db = get_todo_db().lock().unwrap();
+    let todo_data_access = todo_db.deref_mut();
+    let controller = WebTodoController {
+        todo_input_boundary: InputTodo { todo_data_access },
+    };
+    let todo = controller.get_all_todo();
 
     HttpResponse::Ok().body(format!("Welcome, users {:?}!", todo))
 }
@@ -163,7 +161,12 @@ async fn create_todo(create_todo_dto: web::Json<CreateTodoDto>) -> impl Responde
     };
 
     let mut todo_db = get_todo_db().lock().unwrap();
-    let _ = todo_db.deref_mut().create(todo.clone());
+    let todo_data_access = todo_db.deref_mut();
+    let mut controller = WebTodoController {
+        todo_input_boundary: InputTodo { todo_data_access },
+    };
+    let _ = controller.create_todo(&todo);
+
     HttpResponse::Ok().body(format!("Created Success: {:?}", todo))
 }
 
