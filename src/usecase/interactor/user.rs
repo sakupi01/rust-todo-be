@@ -2,22 +2,22 @@ use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-pub struct input_user<T> {
-    pub userDataAccess: T,
+pub struct input_user<'a, T> {
+    pub userDataAccess: &'a mut T,
 }
 
-impl<T> UserInputBoundary for input_user<T>
+impl<'a, T> UserInputBoundary for input_user<'a, T>
 where
     T: UserDataAccess,
 {
-    fn create(&self, user: User) -> Result<(), String> {
+    fn create(&mut self, user: User) -> Result<(), String> {
         self.userDataAccess.create(user)
     }
-    fn update_name(&self, id: String, name: String) -> Result<(), String> {
+    fn update_name(&mut self, id: String, name: String) -> Result<(), String> {
         self.userDataAccess.update_name(id, name)
     }
 
-    fn delete(&self, id: String) -> Result<(), String> {
+    fn delete(&mut self, id: String) -> Result<(), String> {
         self.userDataAccess.delete(id)
     }
 
