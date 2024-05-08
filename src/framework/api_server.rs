@@ -20,15 +20,15 @@ use serde::{Deserialize, Serialize};
 //=======================================================================
 struct FakeUserDataAccess {}
 impl UserDataAccess for FakeUserDataAccess {
-    fn create(&self, user: User) -> Result<(), String> {
+    fn create(&mut self, user: User) -> Result<(), String> {
         Ok(())
     }
 
-    fn update_name(&self, id: String, name: String) -> Result<(), String> {
+    fn update_name(&mut self, id: String, name: String) -> Result<(), String> {
         Ok(())
     }
 
-    fn delete(&self, id: String) -> Result<(), String> {
+    fn delete(&mut self, id: String) -> Result<(), String> {
         Ok(())
     }
 
@@ -55,7 +55,7 @@ struct UserInputDto {
 async fn get_all_users() -> impl Responder {
     let controller = WebUserController {
         userInputBoundary: (input_user {
-            userDataAccess: FakeUserDataAccess {},
+            userDataAccess: &mut FakeUserDataAccess {},
         }),
     };
     let users = controller.get_all_user().unwrap();

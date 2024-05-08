@@ -7,13 +7,13 @@ pub struct RamZatsuTodoDb {
     db: HashMap<String, Todo>,
 }
 
-impl RamZatsuUserDb {
-    pub fn new() -> RamZatsuUserDb {
-        RamZatsuUserDb { db: HashMap::new() }
+impl RamZatsuTodoDb {
+    pub fn new() -> RamZatsuTodoDb {
+        RamZatsuTodoDb { db: HashMap::new() }
     }
 }
 
-impl TodoDataAccess for RamZatsuUserDb {
+impl TodoDataAccess for RamZatsuTodoDb {
     fn create(&mut self, todo: crate::domain::todo::Todo) -> Result<(), String> {
         if self.db.insert(todo.id.clone(), todo).is_none() {
             Ok(())
