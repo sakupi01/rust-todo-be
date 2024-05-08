@@ -120,6 +120,7 @@ struct CreateTodoDto {
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct UpdateTitleDto {
+    id: String,
     title: String,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -172,7 +173,25 @@ async fn create_todo(create_todo_dto: web::Json<CreateTodoDto>) -> impl Responde
 
 #[put("/todo/title")]
 async fn update_title(update_title_dto: web::Json<UpdateTitleDto>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Updated Success: {:?}", update_title_dto))
+    let UpdateTitleDto { id, title } = update_title_dto.deref().clone();
+
+    let mut todo_db = get_todo_db().lock().unwrap();
+    let todo_data_access = todo_db.deref_mut();
+    let mut controller = WebTodoController {
+        todo_input_boundary: InputTodo { todo_data_access },
+    };
+    let todo = controller.get_todo_by_id(id);
+    if let Ok(t) = todo {
+        let updatedTodo = Todo {
+            updated_at: Local::now(),
+            title: title,
+            ..t
+        };
+        let _ = controller.update_todo_title(&updatedTodo);
+        HttpResponse::Ok().body(format!("Updated Success: {:?}", update_title_dto))
+    } else {
+        HttpResponse::BadRequest().body(format!("Updated Failed: {:?}", update_title_dto))
+    }
 }
 
 #[put("/todo/content")]

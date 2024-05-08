@@ -25,6 +25,14 @@ where
     pub fn get_all_todo(&self) -> Result<Vec<Todo>, String> {
         self.todo_input_boundary.get_all()
     }
+    pub fn get_todo_by_id(&self, id: String) -> Result<Todo, String> {
+        self.todo_input_boundary
+            .get_all()?
+            .into_iter()
+            .filter(|t| t.id.to_string() == id)
+            .nth(0)
+            .ok_or("err".to_string())
+    }
     pub fn get_todo_by_user_id(&self, user_id: String) -> Result<Vec<Todo>, String> {
         self.todo_input_boundary.get_by_user_id(user_id)
     }

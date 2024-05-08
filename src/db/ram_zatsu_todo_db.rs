@@ -9,7 +9,7 @@ pub struct RamZatsuTodoDb {
 
 impl RamZatsuTodoDb {
     pub fn new() -> RamZatsuTodoDb {
-        RamZatsuTodoDb{db:HashMap::new()}
+        RamZatsuTodoDb { db: HashMap::new() }
     }
 }
 

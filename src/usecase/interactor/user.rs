@@ -14,7 +14,7 @@ where
         self.userDataAccess.create(user)
     }
     fn update_name(&self, id: String, name: String) -> Result<(), String> {
-        self.userDataAccess.update_name(id,name)
+        self.userDataAccess.update_name(id, name)
     }
 
     fn delete(&self, id: String) -> Result<(), String> {
