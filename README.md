@@ -26,7 +26,9 @@ $ docker-compose up --build
 
 ### Architectural Description - Clean Architecture
 
-![Figure: Clean Architecture](image.png)
+![Figure: Clean Architecture](image-1.png)
+
+![Figure: Clean Architecture2](image.png)
 
 ```bash
 src
