@@ -119,12 +119,22 @@ async fn update_user(update_user_dto: web::Json<UpdateUserDto>) -> impl Responde
     let UpdateUserDto { id, name } = update_user_dto.deref().clone();
     
     let mut users_db = get_user_db().lock().unwrap();
-    let user_data_access = users_db.deref_mut();
+    let userDataAccess = users_db.deref_mut();
     let mut controller = WebUserController { 
-        userInputBoundary: input_user { user_data_access },
+        userInputBoundary: input_user { userDataAccess },
     };
-    let result = controller.get_user_by_id()
-    HttpResponse::Ok().body("Updated Success!")
+    let result = controller.get_user_by_id(id);
+
+    if let Ok(u) = result { 
+        let updated_user = User {
+            name: name,
+            ..u
+        };
+        let _ = controller.update_user_name(&updated_user);
+        HttpResponse::Ok().body(format!("Updated Success: {:?}", update_user_dto))
+    } else {
+        HttpResponse::BadRequest().body(format!("Updated Failed: {:?}", result))
+    }
 }
 
 #[delete("/users")]
