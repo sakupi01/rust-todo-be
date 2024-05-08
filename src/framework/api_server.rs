@@ -55,7 +55,7 @@ struct UserInputDto {
 async fn get_all_users() -> impl Responder {
     let controller = WebUserController {
         userInputBoundary: (input_user {
-            userDataAccess: FakeUserDataAccess {},
+            userDataAccess: &mut FakeUserDataAccess {},
         }),
     };
     let users = controller.get_all_user().unwrap();

@@ -2,11 +2,11 @@ use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 use crate::usecase::input_boundary::user::UserInputBoundary;
 
-pub struct input_user<T> {
-    pub userDataAccess: T,
+pub struct input_user<'a, T> {
+    pub userDataAccess: &'a mut T,
 }
 
-impl<T> UserInputBoundary for input_user<T>
+impl<'a, T> UserInputBoundary for input_user<'a, T>
 where
     T: UserDataAccess,
 {
