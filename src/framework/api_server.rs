@@ -105,7 +105,7 @@ async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
     };
     let _ = controller.create_user(&user);
 
-    HttpResponse::Ok().body("Created Success!")
+    HttpResponse::Ok().body(format!("Created Success: {:?}", user))
 }
 
 #[put("/users")]

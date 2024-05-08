@@ -160,4 +160,6 @@ curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" 
 
 curl -XGET localhost:8081/todo
 
-curl -XPOST localhost:8081/user -H "Content-Type: application/json" -d '{"name" : "綾鷹" }'
+curl -XPOST localhost:8081/users -H "Content-Type: application/json" -d '{"name" : "綾鷹" }'
+
+curl -XGET localhost:8081/users
