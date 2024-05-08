@@ -1,5 +1,3 @@
-use std::ops::{Deref, DerefMut};
-
 use crate::db::init_todo_db::get_todo_db;
 use crate::db::init_user_db::get_user_db;
 use crate::db::ram_zatsu_todo_db::RamZatsuTodoDb;
@@ -16,7 +14,10 @@ use crate::{
 };
 use actix_web::{delete, get, post, put, web, App, HttpResponse, HttpServer, Responder};
 use chrono::Local;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::f32::INFINITY;
+use std::ops::{Deref, DerefMut};
 
 //=======================================================================
 struct FakeUserDataAccess {}
@@ -60,25 +61,57 @@ struct UpdateUserDto {
 
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
+    let mut user_db = get_user_db().lock().unwrap();
+    let user_data_access = user_db.deref_mut();
     let controller = WebUserController {
-        userInputBoundary: (input_user {
-            userDataAccess: &mut FakeUserDataAccess {},
-        }),
+        userInputBoundary: input_user {
+            userDataAccess: user_data_access,
+        },
     };
-    let users = controller.get_all_user().unwrap();
-    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+    let users = controller.get_all_user();
+    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users))
 }
 
 #[get("/users/{user_id}")]
 async fn get_user_by_id(path: web::Path<String>) -> impl Responder {
     let user_id = path.into_inner();
-    println!("user_id: {:?}", user_id);
-    HttpResponse::Ok().body(format!("Welcome, user_id {}!", user_id))
+
+    let mut user_db = get_user_db().lock().unwrap();
+    let user_data_access = user_db.deref_mut();
+    let controller = WebUserController {
+        userInputBoundary: input_user {
+            userDataAccess: user_data_access,
+        },
+    };
+
+    match controller.get_user_by_id(user_id) {
+        Ok(user) => HttpResponse::Ok().body(format!("Welcome, user_id {:?}!", user)),
+        Err(_) => HttpResponse::BadRequest().body("err"),
+    }
 }
 
 #[post("/users")]
 async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
-    HttpResponse::Ok().body("Created Success!")
+    let UserInputDto { name } = user_input.deref().clone();
+
+    let mut rng = rand::thread_rng();
+    let random_int = rng.gen_range(0..INFINITY as i32);
+
+    let user = User {
+        id: random_int.to_string(),
+        created_at: Local::now(),
+        updated_at: Local::now(),
+        name: name,
+    };
+
+    let mut user_db = get_user_db().lock().unwrap();
+    let userDataAccess = user_db.deref_mut();
+    let mut controller = WebUserController {
+        userInputBoundary: input_user { userDataAccess },
+    };
+    let _ = controller.create_user(&user);
+
+    HttpResponse::Ok().body(format!("Created Success: {:?}", user))
 }
 
 #[put("/users")]
@@ -167,9 +200,10 @@ async fn create_todo(create_todo_dto: web::Json<CreateTodoDto>) -> impl Responde
         content,
         user_id,
     } = create_todo_dto.deref().clone();
-
+    let mut rng = rand::thread_rng();
+    let random_int = rng.gen_range(0..INFINITY as i32);
     let todo = Todo {
-        id: "1".to_string(),
+        id: random_int.to_string(),
         created_at: Local::now(),
         updated_at: Local::now(),
         title: title,
