@@ -59,6 +59,11 @@ struct UpdateUserDto {
     name: String,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct DeleteUserDto {
+    id: String,
+}
+
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
     let mut user_db = get_user_db().lock().unwrap();
@@ -138,8 +143,22 @@ async fn update_user(update_user_dto: web::Json<UpdateUserDto>) -> impl Responde
 }
 
 #[delete("/users")]
-async fn delete_user(user_input: web::Json<UserInputDto>) -> impl Responder {
-    HttpResponse::Ok().body("Deleted Success!")
+async fn delete_user(delete_user_dto: web::Json<DeleteUserDto>) -> impl Responder {
+    let DeleteUserDto { id } = delete_user_dto.deref().clone();
+    
+    let mut users_db = get_user_db().lock().unwrap();
+    let userDataAccess = users_db.deref_mut();
+    let mut controller = WebUserController { 
+        userInputBoundary: input_user { userDataAccess },
+    };
+    let result = controller.get_user_by_id(id);
+
+    if let Ok(u) = result {
+        let _ = controller.delete_user(&u);
+        HttpResponse::Ok().body(format!("Deleted Success: {:?}", delete_user_dto))
+    } else {
+        HttpResponse::BadRequest().body(format!("Deleted Failed: {:?}", result))
+    }
 }
 
 //=======================================================================
