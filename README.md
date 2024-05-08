@@ -71,40 +71,6 @@ $ cargo run --bin gen_schema
 ![Figure: Clean Architecture](image.png)
 ```bash
 src
-├── domain // 🟢エンティティ。最重要ビジネスルールをカプセル化したもの
-│   ├── todo.rs
-│   └── user.rs
-├── domain.rs // 🟢./domain配下のモジュールexport
-├── interface_adapter  //🟢./domain配下のモジュールexport
-│   ├── todo_viewmodel.rs
-│   ├── user_viewmodel.rs
-│   ├── web_todo_controller.rs
-│   └── web_user_controller.rs
-├── interface_adapter.rs // 🟢./interface_adapter配下のモジュールexport
-├── lib.rs // 🟢最上位ディレクトリのexport
-├── main.rs
-├── presenter // 🟢
-│   ├── todo.rs
-│   └── user.rs
-├── presenter.rs // 🟢./presenter配下のモジュールexport
-├── usecase // 🟢アプリケーション固有のビジネスルール
-│   ├── data_access // 🟢DBの型をusecaseで使用する型と合わせる
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   ├── data_access.rs // 🟢./data_access配下のモジュールexports
-│   ├── input_boundary // 🟢interface_adapter→usecase interface_adapterへの直接依存を防ぐためのIF(IF分離の法則)
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   ├── input_boundary.rs // 🟢./input_boundary配下のモジュールexport
-│   ├── interactor // 🟢ビジネスロジック実装の定義
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   └── interactor.rs // 🟢./interactor配下のモジュールexport
-└── usecase.rs // 🟢./usecase配下のモジュールexport
-```
-
-```bash
-src
 ├── domain  // 🟢エンティティ。最重要ビジネスルールをカプセル化したもの
 │   ├── todo.rs
 │   └── user.rs
@@ -145,21 +111,58 @@ src
 └── usecase.rs  // 🟢アプリケーション固有のビジネスルール
 ```
 
+### `/todo`
+
+```bash
+curl -XPUT localhost:8081/todo/content -H "Content-Type: application/json" -d '{"content" : "Selected...", "id": "1" }'
+```
+
+### POST: `/user`
+```bash
+curl -XPOST localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
+```
+
+### PUT: `/user`
+```bash
+curl -XPUT localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
+```
+
+### PUT: `/user`
+```bash
+curl -XPUT localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
+```
+
+### DELETE: `/user`
+```bash
+curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" : "1"}'
+```
+
+```bash
+curl -XGET localhost:8081/todo
+```
+
+### GET: `/user`
+```bash
+curl -XGET localhost:8081/users
+```
+
+### POST: `/user`
+```bash
+curl -XPOST localhost:8081/users -H "Content-Type: application/json" -d '{"name" : "綾鷹" }'
+```
+
+### PUT: `/user/name`
+```bash
+curl -XPUT localhost:8081/users/name -H "Content-Type: application/json" -d '{"name" : "伊右衛門" }'
+```
+
+### DELETE: `/user`
+```bash
+curl -XDELETE localhost:8081/users -H "Content-Type: application/json" -d '{"id" : "1" }'
+```
+
+
 Ref: 
 https://zenn.dev/htlsne/articles/rust-clean-architecture
 https://github.com/hiterm/bookshelf-api
 https://lucid.app/lucidchart/62854681-180e-4860-9d75-9c878674ba6d/edit?viewport_loc=-275%2C368%2C2917%2C1395%2C0_0&invitationId=inv_78d72729-6626-4966-a05d-d5e67e6ca173
-
-
-curl -XPUT localhost:8081/todo/content -H "Content-Type: application/json" -d '{"content" : "Selected...", "id": "1" }'
-
-curl -XPOST localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
-
-
-curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" : "todo_id"}'
-
-curl -XGET localhost:8081/todo
-
-curl -XPOST localhost:8081/users -H "Content-Type: application/json" -d '{"name" : "綾鷹" }'
-
-curl -XGET localhost:8081/users
