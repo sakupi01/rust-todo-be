@@ -53,6 +53,17 @@ struct UserInputDto {
     name: String,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UpdateUserDto {
+    id: String,
+    name: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct DeleteUserDto {
+    id: String,
+}
+
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
     let mut user_db = get_user_db().lock().unwrap();
@@ -109,13 +120,45 @@ async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
 }
 
 #[put("/users")]
-async fn update_user(user_input: web::Json<UserInputDto>) -> impl Responder {
-    HttpResponse::Ok().body("Updated Success!")
+async fn update_user(update_user_dto: web::Json<UpdateUserDto>) -> impl Responder {
+    let UpdateUserDto { id, name } = update_user_dto.deref().clone();
+    
+    let mut users_db = get_user_db().lock().unwrap();
+    let userDataAccess = users_db.deref_mut();
+    let mut controller = WebUserController { 
+        userInputBoundary: input_user { userDataAccess },
+    };
+    let result = controller.get_user_by_id(id);
+
+    if let Ok(u) = result { 
+        let updated_user = User {
+            name: name,
+            ..u
+        };
+        let _ = controller.update_user_name(&updated_user);
+        HttpResponse::Ok().body(format!("Updated Success: {:?}", update_user_dto))
+    } else {
+        HttpResponse::BadRequest().body(format!("Updated Failed: {:?}", result))
+    }
 }
 
 #[delete("/users")]
-async fn delete_user(user_input: web::Json<UserInputDto>) -> impl Responder {
-    HttpResponse::Ok().body("Deleted Success!")
+async fn delete_user(delete_user_dto: web::Json<DeleteUserDto>) -> impl Responder {
+    let DeleteUserDto { id } = delete_user_dto.deref().clone();
+    
+    let mut users_db = get_user_db().lock().unwrap();
+    let userDataAccess = users_db.deref_mut();
+    let mut controller = WebUserController { 
+        userInputBoundary: input_user { userDataAccess },
+    };
+    let result = controller.get_user_by_id(id);
+
+    if let Ok(u) = result {
+        let _ = controller.delete_user(&u);
+        HttpResponse::Ok().body(format!("Deleted Success: {:?}", delete_user_dto))
+    } else {
+        HttpResponse::BadRequest().body(format!("Deleted Failed: {:?}", result))
+    }
 }
 
 //=======================================================================
