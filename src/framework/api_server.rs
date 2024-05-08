@@ -90,7 +90,7 @@ async fn create_user(user_input: web::Json<UserInputDto>) -> impl Responder {
     let mut controller = WebUserController {
         userInputBoundary: input_user { userDataAccess },
     };
-    // let _ = controller.
+    let _ = controller.create_user(&user);
 
     HttpResponse::Ok().body("Created Success!")
 }
