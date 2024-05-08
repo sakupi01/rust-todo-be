@@ -27,47 +27,6 @@ $ docker-compose up --build
 ### Architectural Description - Clean Architecture
 
 ![Figure: Clean Architecture](image.png)
-```bash
-src
-├── domain  // 🟢エンティティ。最重要ビジネスルールをカプセル化したもの
-│   ├── todo.rs
-│   └── user.rs
-├── domain.rs
-├── interface_adapter // 🟢MVCを保持しているレイヤー
-│   ├── controller // 🟢 リクエストを受け取り、レスポンスを返すための窓口
-│   │   ├── web_todo.rs
-│   │   └── web_user.rs
-│   ├── controller.rs
-│   ├── presenter // 🟢 Output DataからView Modelで定義されている型に変換するための処理
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   ├── presenter.rs
-│   ├── viewmodel // 🟢 レスポンスの型
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   └── viewmodel.rs
-├── interface_adapter.rs
-├── lib.rs
-├── main.rs
-├── usecase // 🟢アプリケーション固有のビジネスルール
-│   ├── data_access // 🟢DBの型をusecaseで使用する型と合わせる
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   ├── data_access.rs
-│   ├── input_boundary // 🟢 interface_adapter→usecaseへの直接依存を防ぐためのIF(IF分離の法則)
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   ├── input_boundary.rs
-│   ├── interactor // 🟢ビジネスロジック実装の定義
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   └── interactor.rs
-│   ├── output_data // 🟢ユースケース層出力値の定義
-│   │   ├── todo.rs
-│   │   └── user.rs
-│   └── output_data.rs
-└── usecase.rs  // 🟢アプリケーション固有のビジネスルール
-```
 
 ```bash
 src
