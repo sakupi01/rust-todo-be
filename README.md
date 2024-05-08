@@ -151,3 +151,11 @@ https://github.com/hiterm/bookshelf-api
 https://lucid.app/lucidchart/62854681-180e-4860-9d75-9c878674ba6d/edit?viewport_loc=-275%2C368%2C2917%2C1395%2C0_0&invitationId=inv_78d72729-6626-4966-a05d-d5e67e6ca173
 
 
+curl -XPUT localhost:8081/todo/content -H "Content-Type: application/json" -d '{"content" : "Selected...", "id": "1" }'
+
+curl -XPOST localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
+
+
+curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" : "todo_id"}'
+
+curl -XGET localhost:8081/todo

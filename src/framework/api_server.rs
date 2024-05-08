@@ -223,6 +223,21 @@ async fn update_content(update_content_dto: web::Json<UpdateContentDto>) -> impl
 
 #[delete("/todo")]
 async fn delete_todo(delete_todo_dto: web::Json<DeleteTodoDto>) -> impl Responder {
+    let DeleteTodoDto { id } = delete_todo_dto.deref().clone();
+    let mut todo_db = get_todo_db().lock().unwrap();
+    let todo_data_access = todo_db.deref_mut();
+    let mut controller = WebTodoController {
+        todo_input_boundary: InputTodo { todo_data_access },
+    };
+    let todoResult = controller.get_todo_by_id(id);
+
+    if let Ok(t) = todoResult {
+        let _ = controller.delete_todo(&t);
+        HttpResponse::Ok().body(format!("Deleted Success: {:?}", delete_todo_dto));
+    } else if let Err(e) = todoResult {
+        return HttpResponse::BadRequest().body(format!("Deleted Failed: {:?}", e));
+    }
+
     HttpResponse::Ok().body(format!("Deleted Success: {:?}", delete_todo_dto))
 }
 
