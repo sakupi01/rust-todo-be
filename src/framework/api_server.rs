@@ -132,12 +132,13 @@ struct DeleteTodoDto {
 
 #[get("/todo")]
 async fn get_all_todo() -> impl Responder {
+    let mut foo = get_todo_db().lock().unwrap().deref_mut();
     let controller = WebTodoController {
         todo_input_boundary: (InputTodo {
-            todo_data_access: get_todo_db().lock().unwrap().deref_mut(),
+            todo_data_access: foo,
         }),
     };
-    let users = controller.get_all_todo().unwrap();
+    let todo = controller.todo_input_boundary.todo_data_access.get_all();
 
     let mut todo_db = get_todo_db().lock().unwrap();
 
