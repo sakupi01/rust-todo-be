@@ -20,7 +20,7 @@ impl UserDataAccess for FakeUserDataAccess {
         Ok(())
     }
 
-    fn update_name(&self,id: String, name: String) -> Result<(), String> {
+    fn update_name(&self, id: String, name: String) -> Result<(), String> {
         Ok(())
     }
 
@@ -87,11 +87,11 @@ impl TodoDataAccess for FakeTodoDataAccess {
         Ok(())
     }
 
-    fn update_title(&mut self,id:String, name: String) -> Result<(), String> {
+    fn update_title(&mut self, id: String, name: String) -> Result<(), String> {
         todo!()
     }
 
-    fn update_content(&mut self,id:String, content: String) -> Result<(), String> {
+    fn update_content(&mut self, id: String, content: String) -> Result<(), String> {
         todo!()
     }
 
@@ -108,6 +108,12 @@ impl TodoDataAccess for FakeTodoDataAccess {
     }
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct CreateTodoDto {
+    title: String,
+    content: String,
+    user_id: String,
+}
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct UpdateTitleDto {
     title: String,
@@ -130,6 +136,11 @@ async fn get_all_todo() -> impl Responder {
     };
     let users = controller.get_all_todo().unwrap();
     HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+}
+
+#[post("/todo")]
+async fn create_todo(create_todo_dto: web::Json<CreateTodoDto>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Created Success!"))
 }
 
 #[put("/todo/title")]

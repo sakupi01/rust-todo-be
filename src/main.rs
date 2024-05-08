@@ -4,14 +4,17 @@
 // }
 use actix_web::{web, App, HttpServer};
 use chrono::Local;
-use rust_todo_be::{db::init_todo_db::get_todo_db, domain::todo::Todo, framework::api_server, usecase::data_access::todo::TodoDataAccess};
+use rust_todo_be::{
+    db::init_todo_db::get_todo_db, domain::todo::Todo, framework::api_server,
+    usecase::data_access::todo::TodoDataAccess,
+};
 use std::{borrow::Borrow, ops::DerefMut, thread};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let t1 = thread::spawn(|| {
         let mut todo_db = get_todo_db().lock().unwrap();
-        let todo_test = Todo{
+        let todo_test = Todo {
             id: "todo_id".to_string(),
             created_at: Local::now(),
             updated_at: Local::now(),
@@ -32,6 +35,7 @@ async fn main() -> std::io::Result<()> {
             .service(api_server::update_user)
             .service(api_server::delete_user)
             .service(api_server::get_all_todo)
+            .service(api_server::create_todo)
             .service(api_server::update_title)
             .service(api_server::update_content)
             .service(api_server::delete_todo)
