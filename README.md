@@ -149,3 +149,5 @@ Ref:
 https://zenn.dev/htlsne/articles/rust-clean-architecture
 https://github.com/hiterm/bookshelf-api
 https://lucid.app/lucidchart/62854681-180e-4860-9d75-9c878674ba6d/edit?viewport_loc=-275%2C368%2C2917%2C1395%2C0_0&invitationId=inv_78d72729-6626-4966-a05d-d5e67e6ca173
+
+
