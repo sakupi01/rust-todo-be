@@ -8,14 +8,14 @@ impl<T> WebUserController<T>
 where
     T: UserInputBoundary,
 {
-    pub fn create_user(&self, user: &User) -> Result<(), String> {
+    pub fn create_user(&mut self, user: &User) -> Result<(), String> {
         self.userInputBoundary.create(user.clone())
     }
-    pub fn update_user_name(&self, user: &User) -> Result<(), String> {
+    pub fn update_user_name(&mut self, user: &User) -> Result<(), String> {
         self.userInputBoundary
             .update_name(user.id.clone(), user.name.clone())
     }
-    pub fn delete_user(&self, user: &User) -> Result<(), String> {
+    pub fn delete_user(&mut self, user: &User) -> Result<(), String> {
         self.userInputBoundary.delete(user.id.clone())
     }
     pub fn get_all_user(&self) -> Result<Vec<User>, String> {

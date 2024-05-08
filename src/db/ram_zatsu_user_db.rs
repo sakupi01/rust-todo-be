@@ -3,8 +3,14 @@ use std::collections::HashMap;
 use crate::domain::user::User;
 use crate::usecase::data_access::user::UserDataAccess;
 
-struct RamZatsuUserDb {
+pub struct RamZatsuUserDb {
     db: HashMap<String, User>,
+}
+
+impl RamZatsuUserDb {
+    pub fn new() -> RamZatsuUserDb {
+        RamZatsuUserDb { db: HashMap::new() }
+    }
 }
 
 impl UserDataAccess for RamZatsuUserDb {
