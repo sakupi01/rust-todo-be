@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use crate::db::init_todo_db::get_todo_db;
+use crate::db::init_user_db::get_user_db;
 use crate::db::ram_zatsu_todo_db::RamZatsuTodoDb;
 use crate::domain::todo::Todo;
 use crate::domain::user;
@@ -53,20 +54,33 @@ struct UserInputDto {
 
 #[get("/users")]
 async fn get_all_users() -> impl Responder {
+    let mut user_db = get_user_db().lock().unwrap();
+    let user_data_access = user_db.deref_mut();
     let controller = WebUserController {
-        userInputBoundary: (input_user {
-            userDataAccess: &mut FakeUserDataAccess {},
-        }),
+        userInputBoundary: input_user {
+            userDataAccess: user_data_access,
+        },
     };
-    let users = controller.get_all_user().unwrap();
-    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users[0]))
+    let users = controller.get_all_user();
+    HttpResponse::Ok().body(format!("Welcome, users {:?}!", users))
 }
 
 #[get("/users/{user_id}")]
 async fn get_user_by_id(path: web::Path<String>) -> impl Responder {
     let user_id = path.into_inner();
-    println!("user_id: {:?}", user_id);
-    HttpResponse::Ok().body(format!("Welcome, user_id {}!", user_id))
+
+    let mut user_db = get_user_db().lock().unwrap();
+    let user_data_access = user_db.deref_mut();
+    let controller = WebUserController {
+        userInputBoundary: input_user {
+            userDataAccess: user_data_access,
+        },
+    };
+
+    match controller.get_user_by_id(user_id) {
+        Ok(user) => HttpResponse::Ok().body(format!("Welcome, user_id {:?}!", user)),
+        Err(_) => HttpResponse::BadRequest().body("err"),
+    }
 }
 
 #[post("/users")]
