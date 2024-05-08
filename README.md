@@ -1,35 +1,14 @@
 ![ci](https://github.com/hiterm/bookshelf-api/actions/workflows/ci.yml/badge.svg)
 
-# Bookshelf API
-
-Backend server for [Bookshelf](https://github.com/hiterm/bookshelf/).
+# TODO API
 
 ## How to run server
-
-### Set up Auth0
-
-Set up auth0 by following:
-
-https://auth0.com/developers/hub/code-samples/api/actix-web-rust/basic-authorization
 
 ### Setup .env
 
 ```sh
 $ mv .env.template .env
 $ vim .env  # Fill your value
-```
-
-### Run migration
-
-```
-$ cargo install sqlx-cli
-$ sqlx migrate run
-```
-
-### Start server
-
-```
-$ cargo run
 ```
 
 ### Run via Docker Compose
@@ -43,31 +22,10 @@ $ vim .env.docker  # Fill your value
 $ docker-compose up --build
 ```
 
-## Test
-
-```
-$ cargo test
-```
-
-With DB
-
-```
-$ docker-compose -f docker-compose-test.yml up -d
-$ cargo test -- --include-ignored
-```
-
-## GraphQL Playground
-
-Run server and access `/graphql/playground`.
-
-## Generate GraphQL schema
-
-```
-$ cargo run --bin gen_schema
-```
 ***
 
-### How it works as a Clean Architecture
+### Architectural Description - Clean Architecture
+
 ![Figure: Clean Architecture](image.png)
 ```bash
 src
@@ -111,52 +69,100 @@ src
 └── usecase.rs  // 🟢アプリケーション固有のビジネスルール
 ```
 
-### `/todo`
-
 ```bash
-curl -XPUT localhost:8081/todo/content -H "Content-Type: application/json" -d '{"content" : "Selected...", "id": "1" }'
+src
+├── db // 🟢DB モデル
+│   ├── init_todo_db.rs
+│   ├── init_user_db.rs
+│   ├── ram_zatsu_todo_db.rs
+│   └── ram_zatsu_user_db.rs
+├── db.rs
+├── domain // 🟢エンティティ。最重要ビジネスルールをカプセル化したもの
+│   ├── todo.rs
+│   └── user.rs
+├── domain.rs
+├── framework　// 🟢APIハンドラ
+│   └── api_server.rs
+├── framework.rs
+├── interface_adapter // 🟢MVCを保持しているレイヤー
+│   ├── controller // 🟢 リクエストを受け取り、レスポンスを返すための窓口
+│   │   ├── web_todo.rs
+│   │   └── web_user.rs
+│   ├── controller.rs
+│   ├── presenter // 🟢 Output DataからView Modelで定義されている型に変換するための処理
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   ├── presenter.rs
+│   ├── viewmodel // 🟢 レスポンスの型
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   └── viewmodel.rs
+├── interface_adapter.rs
+├── lib.rs
+├── main.rs
+├── usecase // 🟢アプリケーション固有のビジネスルール
+│   ├── data_access // 🟢DBの型をusecaseで使用する型と合わせる
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   ├── data_access.rs
+│   ├── input_boundary // 🟢 interface_adapter→usecaseへの直接依存を防ぐためのIF(IF分離の法則)
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   ├── input_boundary.rs
+│   ├── interactor // 🟢ビジネスロジック実装の定義
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   ├── interactor.rs
+│   ├── output_data // 🟢ユースケース層出力値の定義
+│   │   ├── todo.rs
+│   │   └── user.rs
+│   └── output_data.rs
+└── usecase.rs // 🟢アプリケーション固有のビジネスルール
 ```
 
-### POST: `/user`
-```bash
-curl -XPOST localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
-```
-
-### PUT: `/user`
-```bash
-curl -XPUT localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
-```
-
-### PUT: `/user`
-```bash
-curl -XPUT localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
-```
-
-### DELETE: `/user`
-```bash
-curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" : "1"}'
-```
-
+### GET: `/todo`
 ```bash
 curl -XGET localhost:8081/todo
 ```
 
-### GET: `/user`
+### POST: `/todo`
+```bash
+curl -XPOST localhost:8081/todo -H "Content-Type: application/json" -d '{"title" : "綾鷹", "content": "選ばれたのは", "user_id": "1" }'
+```
+
+### PUT: `/todo/title`
+```bash
+curl -XPUT localhost:8081/todo/title -H "Content-Type: application/json" -d '{"id" : "1", "title": "爽健美茶" }'
+```
+
+### PUT: `/todo/content`
+```bash
+curl -XPUT localhost:8081/todo/content -H "Content-Type: application/json" -d '{"id" : "1", "content": "Selected..." }'
+```
+
+### DELETE: `/todo`
+```bash
+curl -XDELETE localhost:8081/todo -H "Content-Type: application/json" -d '{"id" : "1"}'
+```
+
+***
+
+### GET: `/users`
 ```bash
 curl -XGET localhost:8081/users
 ```
 
-### POST: `/user`
+### POST: `/users`
 ```bash
 curl -XPOST localhost:8081/users -H "Content-Type: application/json" -d '{"name" : "綾鷹" }'
 ```
 
-### PUT: `/user/name`
+### PUT: `/users`
 ```bash
-curl -XPUT localhost:8081/users/name -H "Content-Type: application/json" -d '{"name" : "伊右衛門" }'
+curl -XPUT localhost:8081/users -H "Content-Type: application/json" -d '{"name" : "伊右衛門" }'
 ```
 
-### DELETE: `/user`
+### DELETE: `/users`
 ```bash
 curl -XDELETE localhost:8081/users -H "Content-Type: application/json" -d '{"id" : "1" }'
 ```
