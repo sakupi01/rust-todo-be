@@ -1,11 +1,10 @@
-// use std::collections::HashMap;
-// use std::sync::{Mutex, OnceLock};
-// use std::thread;
-// use std::time::Duration;
+use std::sync::{Mutex, OnceLock};
 
-// // global mutable variable
-// static TODO_DB: OnceLock<Mutex<RamZatsuTodoDb>> = OnceLock::new();
+use super::ram_zatsu_user_db::RamZatsuUserDb;
 
-// pub fn get_todo_db() -> &'static Mutex<HashMap<String, String>> {
-//     TODO_DB.get_or_init(|| Mutex::new(HashMap::new()))
-// }
+// global mutable variable
+static USER_DB: OnceLock<Mutex<RamZatsuUserDb>> = OnceLock::new();
+
+pub fn get_user_db() -> &'static Mutex<RamZatsuUserDb> {
+    USER_DB.get_or_init(|| Mutex::new(RamZatsuUserDb::new()))
+}

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-struct RamZatsuUserDb {
+pub struct RamZatsuUserDb {
     db: HashMap<String, String>,
 }
 
